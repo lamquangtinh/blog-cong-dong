@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PostAdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MyPostController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PostController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,18 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+
+    // Quên mật khẩu (tên route password.* là tên Laravel dùng để dựng liên kết trong email)
+    Route::get('/forgot-password', [PasswordResetController::class, 'showLinkRequest'])
+        ->name('password.request');
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendLink'])
+        ->middleware('throttle:6,1')
+        ->name('password.email');
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'showReset'])
+        ->name('password.reset');
+    Route::post('/reset-password', [PasswordResetController::class, 'reset'])
+        ->middleware('throttle:6,1')
+        ->name('password.update');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])
@@ -70,6 +83,4 @@ Route::middleware(['auth', AdminMiddleware::class])
         Route::delete('/posts/{post}', [PostAdminController::class, 'destroy'])->name('posts.destroy');
 
         Route::get('/comments', [CommentAdminController::class, 'index'])->name('comments.index');
-        
     });
-   

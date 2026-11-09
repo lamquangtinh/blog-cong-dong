@@ -22,7 +22,10 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="password" class="form-label">Mật khẩu</label>
+                            <div class="d-flex justify-content-between">
+                                <label for="password" class="form-label">Mật khẩu</label>
+                                <a href="{{ route('password.request') }}" class="small">Quên mật khẩu?</a>
+                            </div>
                             <input type="password" id="password" name="password"
                                    class="form-control @error('password') is-invalid @enderror" required>
                             @error('password')
