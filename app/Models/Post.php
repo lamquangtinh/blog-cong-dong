@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class Post extends Model
@@ -76,6 +77,27 @@ class Post extends Model
         }
 
         return $slug;
+    }
+
+    // Nội dung bài viết dạng HTML, viết bằng Markdown.
+    // html_input = strip: bỏ mọi thẻ HTML người dùng tự gõ (chống XSS).
+    // allow_unsafe_links = false: vô hiệu hóa liên kết javascript:, data:...
+    // soft_break: dòng xuống dòng đơn vẫn được giữ như văn bản thường.
+    public function bodyHtml(): HtmlString
+    {
+        return new HtmlString(Str::markdown((string) $this->body, [
+            'html_input' => 'strip',
+            'allow_unsafe_links' => false,
+            'renderer' => ['soft_break' => "<br>\n"],
+        ]));
+    }
+
+    // Đoạn trích ngắn cho trang chủ: bỏ ký hiệu Markdown, gom khoảng trắng
+    public function excerpt(int $limit = 120): string
+    {
+        $text = html_entity_decode(strip_tags($this->bodyHtml()->toHtml()), ENT_QUOTES, 'UTF-8');
+
+        return Str::limit(trim((string) preg_replace('/\s+/u', ' ', $text)), $limit);
     }
 
     public function statusLabel(): string

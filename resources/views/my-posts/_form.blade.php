@@ -20,13 +20,17 @@
                 @enderror
             </div>
 
-            <div class="mb-3">
+                    <div class="mb-3">
                 <label for="body" class="form-label">Nội dung</label>
-                <textarea id="body" name="body" rows="14"
-                          class="form-control @error('body') is-invalid @enderror" required>{{ old('body', $post->body) }}</textarea>
+                <textarea id="body" name="body" rows="16"
+                          class="form-control font-monospace @error('body') is-invalid @enderror" required>{{ old('body', $post->body) }}</textarea>
                 @error('body')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
+                <div class="form-text">
+                    Hỗ trợ Markdown: <code>## Tiêu đề</code>, <code>**đậm**</code>, <code>- danh sách</code>,
+                    <code>`mã`</code>. Chèn khối code: dòng đầu gõ <code>```php</code>, dòng cuối gõ <code>```</code>.
+                </div>
             </div>
         </div>
 

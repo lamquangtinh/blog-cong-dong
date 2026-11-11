@@ -35,7 +35,7 @@
             @endif
 
             {{-- e() thoát ký tự HTML để chống XSS, nl2br giữ xuống dòng --}}
-            <div class="article-body">{!! nl2br(e($post->body)) !!}</div>
+            <div class="article-body">{!! $post->bodyHtml() !!}</div>
         </article>
 
         <hr class="my-5">
@@ -87,4 +87,8 @@
             </div>
         </section>
     </div>
-@endsection
+@endsection     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        document.querySelectorAll('.article-body pre code').forEach(function (el) { hljs.highlightElement(el); });
+    </script>

@@ -73,7 +73,7 @@
                             <a href="{{ route('posts.show', ['post' => $post->slug]) }}">{{ $post->title }}</a>
                         </h2>
 
-                        <p class="post-excerpt">{{ \Illuminate\Support\Str::limit($post->body, 120) }}</p>
+                        <p class="post-excerpt">{{ $post->excerpt(120) }}</p>
 
                         <div class="mt-auto">
                             @if ($post->tags->isNotEmpty())
